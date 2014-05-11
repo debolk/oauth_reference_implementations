@@ -9,19 +9,20 @@ var OAuth = (function(config){
 
     var access_token = null;
     var authorization_token = null;
+    var config = config;
 
     return {
-        authenticate: function(){
+        authenticate: function(callback){
             var authorization_token = getURLParameter('code');
             if (authorization_token === 'null') {  // Yes, this is correct
                 // Not authenticated, must login
-                window.location = config.endpoint+'authorize?response_type=code&client_id='+config.client+'&client_pass='+config.secret+'&redirect_uri='+config.callback+'&state=1';
+                window.location = config.url+'authorize?response_type=code&client_id='+config.client+'&client_pass='+config.secret+'&redirect_uri='+config.callback+'&state=1';
             }
             else {
                 // Logged in, request access_token to access services
                 $.ajax({
                     method: 'POST',
-                    url: config.endpoint+'token',
+                    url: config.url+'token',
                     dataType: 'JSON',
                     data: {
                         grant_type: 'authorization_code',
@@ -40,16 +41,10 @@ var OAuth = (function(config){
                         $.ajax({
                             method: 'GET',
                             url: config.endpoint+config.resource+'?access_token='+this.access_token,
-                            success: function(result) {
-                                //FIXME How does this work?
-                                $('button').removeAttr('disabled');
-                            }
+                            success: callback(true),
                         });
                     },
-                    error: function(result){
-                        //FIXME how to implement this?
-                        $('body').html(result + "Please reload.");
-                    },
+                    error: callback(false),
                 });
             }
         },
