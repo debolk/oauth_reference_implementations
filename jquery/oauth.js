@@ -1,5 +1,10 @@
 var OAuth = (function(options){
 
+    // Supply default options
+    options = $.extend({
+        url: 'https://auth.debolk.nl/',
+    }, options);
+
     var getURLParameter = function (name) {
         return decodeURI(
             (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
