@@ -1,5 +1,4 @@
 var OAuth = (function(config){
-    //FIXME Rewrite explictly as a jQuery plugin
 
     var getURLParameter = function (name) {
         return decodeURI(
